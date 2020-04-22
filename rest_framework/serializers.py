@@ -1195,6 +1195,9 @@ class ModelSerializer(Serializer):
             return self.build_url_field(field_name, model_class)
 
         return self.build_unknown_field(field_name, model_class)
+    
+    def get_field_kwargs(self, field_name, model_field):
+        return get_field_kwargs(field_name, model_field)
 
     def build_standard_field(self, field_name, model_field):
         """
@@ -1203,7 +1206,7 @@ class ModelSerializer(Serializer):
         field_mapping = ClassLookupDict(self.serializer_field_mapping)
 
         field_class = field_mapping[model_field]
-        field_kwargs = get_field_kwargs(field_name, model_field)
+        field_kwargs = self.get_field_kwargs(field_name, model_field)
 
         # Special case to handle when a OneToOneField is also the primary key
         if model_field.one_to_one and model_field.primary_key:
